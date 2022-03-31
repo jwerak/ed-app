@@ -1,0 +1,10 @@
+---
+- name: Trigger Ansible Tower Job
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: hello world
+      debug:
+        msg: "Hello World!"
+
+  
