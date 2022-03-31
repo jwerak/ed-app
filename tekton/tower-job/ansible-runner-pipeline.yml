@@ -1,0 +1,42 @@
+---
+# ansible-runner-pipeline.yml
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ansible-job
+spec:
+  params:
+    - name: git-url
+    - name: git-revision
+    - name: ansible-project-dir
+    - name: ansible-playbook-file
+  workspaces:
+    - name: git-source
+  tasks:
+    - name: fetch-from-git
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+      workspaces:
+        - name: output
+          workspace: git-source
+    - name: ansible-job
+      runAfter:
+        - fetch-from-git
+      taskRef:
+        name: ansible-runner
+      params:
+        - name: project-dir
+          value: $(params.ansible-project-dir)
+        - name: args
+          value: 
+            - '-p'
+            - $(params.ansible-playbook-file)
+      workspaces:
+        - name: runner-dir
+          workspace: git-source
