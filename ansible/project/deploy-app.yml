@@ -7,7 +7,4 @@
       ansible.controller.job_launch:
         job_template: "INFRASTRUCTURE / Deploy Application"
         wait: true
-        extra_vars:
-          application: httpd
-
-  
+        extra_vars: "{{ ansible_controller_extra_vars }}"

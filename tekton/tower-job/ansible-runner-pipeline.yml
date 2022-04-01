@@ -27,9 +27,34 @@ spec:
       workspaces:
         - name: output
           workspace: git-source
-    - name: ansible-job
+
+    - name: set-ansible-vars
       runAfter:
         - fetch-from-git
+      workspaces:
+        - name: repo-dir
+          workspace: git-source
+      params:
+        - name: project-dir
+          value: $(params.ansible-project-dir)
+      taskSpec:
+        steps:
+        - image: registry.access.redhat.com/ubi8/ubi-minimal
+          name: set-vars
+          script: |
+            mkdir -p $(workspaces.repo-dir.path)/$(params.project-dir)/env/
+            cat > $(workspaces.repo-dir.path)/$(params.project-dir)/env/extravars <<EOF
+            ---
+            ansible_controller_extra_vars: 
+              application: httpd
+            EOF
+            pwd
+            ls $(workspaces.repo-dir.path)/$(params.project-dir)/env/
+            cat $(workspaces.repo-dir.path)/$(params.project-dir)/env/extravars
+      
+    - name: ansible-job
+      runAfter:
+        - set-ansible-vars
       taskRef:
         name: ansible-runner
       params:
