@@ -5,6 +5,6 @@
   tasks:
     - name: Launch a job template and wait for completion
       ansible.controller.job_launch:
-        job_template: "INFRASTRUCTURE / Deploy Application"
+        job_template: "{{ ansible_controller_job_template_name }}"
         wait: true
         extra_vars: "{{ ansible_controller_extra_vars }}"
