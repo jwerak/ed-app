@@ -10,6 +10,8 @@ spec:
     - name: git-revision
     - name: ansible-project-dir
     - name: ansible-playbook-file
+    - name: tower-secret
+      default: 'toweraccess'
   workspaces:
     - name: git-source
   tasks:
@@ -33,6 +35,8 @@ spec:
       params:
         - name: project-dir
           value: $(params.ansible-project-dir)
+        - name: tower-secret
+          value: $(params.tower-secret)
         - name: args
           value: 
             - '-p'
