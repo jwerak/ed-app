@@ -1,0 +1,13 @@
+---
+- name: Trigger Ansible Tower Job
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Launch a job template and wait for completion
+      ansible.controller.job_launch:
+        job_template: "INFRASTRUCTURE / Deploy Application"
+        wait: true
+        extra_vars:
+          application: httpd
+
+  
