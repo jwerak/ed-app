@@ -19,20 +19,17 @@ spec:
     - name: project-dir
       description: The project directory under the workspace runner-dir
       default: 'ansible'
-    - name: args
-      description: The arguments to pass ansible-runner
-      type: array
-      default:
-        - -p
-        - deploy-app.yml
+    - name: playbook-name
+      default: deploy-app.yml
   steps:
     - name: run-playbook
       image: image-registry.openshift-image-registry.svc:5000/ed-app/ee-supported-rhel8
       command: ['ansible-runner']
       args:
         - run
-        - $(params.args[*])
         - $(params.project-dir)
+        - '-p'
+        - $(params.playbook-name)
       env:
         - name: CONTROLLER_HOST
           valueFrom:

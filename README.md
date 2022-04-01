@@ -47,4 +47,3 @@ podman run -it -e CONTROLLER_HOST=https://ansible-tower-host-url -e CONTROLLER_O
 # Run tests from inside the container, e.g. start playbook:
 ansible-runner run /runner -p deploy-app.yml
 ```
-

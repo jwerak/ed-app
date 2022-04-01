@@ -8,10 +8,11 @@ spec:
   params:
     - name: git-url
     - name: git-revision
+      default: main
     - name: ansible-project-dir
-    - name: ansible-playbook-file
+      default: ansible
     - name: tower-secret
-      default: 'toweraccess'
+      default: toweraccess
   workspaces:
     - name: git-source
   tasks:
@@ -38,19 +39,22 @@ spec:
         - name: project-dir
           value: $(params.ansible-project-dir)
       taskSpec:
+        params:
+          - name: project-dir
+        workspaces:
+          - name: repo-dir
         steps:
-        - image: registry.access.redhat.com/ubi8/ubi-minimal
-          name: set-vars
-          script: |
-            mkdir -p $(workspaces.repo-dir.path)/$(params.project-dir)/env/
-            cat > $(workspaces.repo-dir.path)/$(params.project-dir)/env/extravars <<EOF
-            ---
-            ansible_controller_extra_vars: 
-              application: httpd
-            EOF
-            pwd
-            ls $(workspaces.repo-dir.path)/$(params.project-dir)/env/
-            cat $(workspaces.repo-dir.path)/$(params.project-dir)/env/extravars
+          - image: registry.access.redhat.com/ubi8/ubi-minimal
+            name: set-vars
+            script: |
+              mkdir -p $(workspaces.repo-dir.path)/$(params.project-dir)/env/
+              cat > $(workspaces.repo-dir.path)/$(params.project-dir)/env/extravars <<EOF
+              ---
+              ansible_controller_extra_vars: 
+                application: httpd
+              
+              ansible_controller_job_template_name: "INFRASTRUCTURE / Deploy Application"
+              EOF
       
     - name: ansible-job
       runAfter:
@@ -58,14 +62,8 @@ spec:
       taskRef:
         name: ansible-runner
       params:
-        - name: project-dir
-          value: $(params.ansible-project-dir)
         - name: tower-secret
           value: $(params.tower-secret)
-        - name: args
-          value: 
-            - '-p'
-            - $(params.ansible-playbook-file)
       workspaces:
         - name: runner-dir
           workspace: git-source
