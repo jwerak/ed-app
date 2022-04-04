@@ -13,8 +13,7 @@ Prerequisites:
 
 Setup Steps:
 - Create application namespace
-- Deploy Tekton objects
-  - `oc apply -f tekton/tower-job/`
+  - `oc new-project ed-app`
 - Deploy secrets
   - [Create oauth token](https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#ug-tokens-auth-create) from the Ansible Controller
   - Create secrets from template `secrets/tower-auth.template.yml` -> `secrets/tower-auth.yml`
@@ -22,6 +21,8 @@ Setup Steps:
 - Import container images
   - `oc import-image registry.redhat.io/ansible-automation-platform-21/ee-supported-rhel8:latest --confirm`
   - `oc import-image registry.access.redhat.com/ubi8/ubi-minimal:8.5 --confirm`
+- Deploy Tekton objects
+  - `oc apply -f tekton/tower-job/`
 - Trigger the pipeline from OpenShift Console (must use persistent storage RWO)
 
 ## Components
