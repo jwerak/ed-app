@@ -48,3 +48,25 @@ podman run -it -e CONTROLLER_HOST=https://ansible-tower-host-url -e CONTROLLER_O
 # Run tests from inside the container, e.g. start playbook:
 ansible-runner run /runner -p deploy-app.yml
 ```
+
+### Application 
+
+Simple example application. 
+
+Can be build from this directory using 
+
+```bash
+podman build -t app .
+```
+
+and run via 
+
+```bash
+podman run -d -p 8080:8080 app
+```
+
+It can be configured to show different version and environment via ENV vars, e.g.
+
+```bash
+podman run -d -e ENVIRONMENT=TEST -e VERSION=1.0.0 -p 8080:8080 app
+```
