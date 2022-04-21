@@ -56,7 +56,7 @@ Simple example application.
 Can be build from this directory using 
 
 ```bash
-podman build -t app .
+podman build --build-arg VERSION=0.0.2 -t app .
 ```
 
 and run via 

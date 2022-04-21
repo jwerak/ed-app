@@ -4,10 +4,12 @@ import sys
 import os
 import signal
 
+from version import __version__
+
 HOST_NAME = '0.0.0.0'
 PORT = int(os.getenv('PORT', 8080))
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEV')
-VERSION = '0.0.1'
+VERSION = __version__
 
 MESSAGE = f'''<html>
 <head><title>Example Application</title>
