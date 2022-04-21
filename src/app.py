@@ -7,7 +7,8 @@ import signal
 HOST_NAME = '0.0.0.0'
 PORT = int(os.getenv('PORT', 8080))
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEV')
-VERSION = os.getenv('VERSION', '0.0.1')
+VERSION = '0.0.1'
+
 MESSAGE = f'''<html>
 <head><title>Example Application</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">

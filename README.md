@@ -65,8 +65,8 @@ and run via
 podman run -d -p 8080:8080 app
 ```
 
-It can be configured to show different version and environment via ENV vars, e.g.
+It shows the current version of the app and can be configured to show environment which is set via ENV var *ENVIRONMENT*, e.g.
 
 ```bash
-podman run -d -e ENVIRONMENT=TEST -e VERSION=1.0.0 -p 8080:8080 app
+podman run -d -e ENVIRONMENT=TEST -p 8080:8080 app
 ```
