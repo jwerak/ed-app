@@ -5,6 +5,6 @@
   tasks:
     - name: Launch a job template and wait for completion
       ansible.controller.workflow_launch:
-        job_template: "{{ ansible_controller_workflow_job_template_name }}"
+        name: "{{ ansible_controller_workflow_job_template_name }}"
         wait: true
         extra_vars: "{{ ansible_controller_extra_vars }}"
