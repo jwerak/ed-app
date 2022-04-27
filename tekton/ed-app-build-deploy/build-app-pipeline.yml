@@ -1,0 +1,96 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-and-deploy
+spec:
+  workspaces:
+    - name: shared-workspace
+  params:
+    - name: git-url
+      type: string
+      description: url of the git repo for the code of deployment
+    - name: git-revision
+      type: string
+      description: revision to be used from repo of the code for deployment
+      default: "main"
+    - name: git-tag
+      type: string
+      description: git tag to be fetched
+      default: "dev"
+    - name: IMAGE
+      type: string
+      description: image to be built from the code
+      default: "quay.io/rhsacz/ed-app"
+    - name: tower-secret
+      default: toweraccess
+  tasks:
+
+    - name: fetch-repository
+      taskRef:
+        name: git-clone
+        kind: ClusterTask
+      workspaces:
+      - name: output
+        workspace: shared-workspace
+      params:
+      - name: url
+        value: $(params.git-url)
+      - name: revision
+        value: $(params.git-revision)
+    
+    - name: build-image
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      params:
+      - name: IMAGE
+        value: $(params.IMAGE):$(params.git-tag)
+      - name: DOCKERFILE
+        value: ./Containerfile
+      - name: BUILD_EXTRA_ARGS
+        value: --build-arg VERSION=$(params.git-tag)
+      workspaces:
+      - name: source
+        workspace: shared-workspace
+      runAfter:
+      - fetch-repository
+
+    - name: set-ansible-vars
+      runAfter:
+        - build-image
+      workspaces:
+        - name: repo-dir
+          workspace: shared-workspace
+      params:
+        - name: application-version
+          value: $(params.git-tag)
+      taskSpec:
+        params:
+          - name: application-version
+        workspaces:
+          - name: repo-dir
+        steps:
+          - image: registry.access.redhat.com/ubi8/ubi-minimal
+            name: set-vars
+            script: |
+              mkdir -p $(workspaces.repo-dir.path)/ansible/env/
+              cat > $(workspaces.repo-dir.path)/ansible/env/extravars <<EOF
+              ---
+              ansible_controller_extra_vars: 
+                application_version: $(params.application-version)
+              
+              ansible_controller_workflow_job_template_name: "DEV / Release Application Version"
+              EOF
+
+    - name: ansible-job
+      runAfter:
+        - set-ansible-vars
+      taskRef:
+        name: ansible-runner
+      params:
+        - name: tower-secret
+          value: $(params.tower-secret)
+      workspaces:
+        - name: runner-dir
+          workspace: shared-workspace

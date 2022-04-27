@@ -1,0 +1,44 @@
+---
+# ansible-runner-task.yml
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: ansible-runner
+spec:
+  description: >-
+    Task to run Ansible playbooks using Ansible Runner
+  workspaces:
+    - name: runner-dir
+      description: The Ansible runner directory
+  params:
+    - name: tower-secret
+      description: The name of k8s secret with tower auth info
+      default: 'toweraccess'
+    - name: tower-job-template-name
+      default: 'INFRASTRUCTURE / Deploy Application'
+    - name: project-dir
+      description: The project directory under the workspace runner-dir
+      default: 'ansible'
+    - name: playbook-name
+      default: deploy-app.yml
+  steps:
+    - name: run-playbook
+      image: image-registry.openshift-image-registry.svc:5000/ed-app/ee-supported-rhel8
+      command: ['ansible-runner']
+      args:
+        - run
+        - $(params.project-dir)
+        - '-p'
+        - $(params.playbook-name)
+      env:
+        - name: CONTROLLER_HOST
+          valueFrom:
+            secretKeyRef:
+              name: $(params.tower-secret)
+              key: host
+        - name: CONTROLLER_OAUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(params.tower-secret)
+              key: token
+      workingDir: '$(workspaces.runner-dir.path)'
