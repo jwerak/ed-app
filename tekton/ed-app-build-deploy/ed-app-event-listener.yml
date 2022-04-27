@@ -1,0 +1,9 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: ed-app-event-listener
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - triggerRef: ed-app-trigger

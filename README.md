@@ -18,6 +18,8 @@ Setup Steps:
   - [Create oauth token](https://docs.ansible.com/automation-controller/4.1.0/html/userguide/applications_auth.html#ug-tokens-auth-create) from the Ansible Controller
   - Create secrets from template `secrets/tower-auth.template.yml` -> `secrets/tower-auth.yml`
   - `oc apply -f secrets/tower-auth.yml`
+  - `oc apply -f secrets/registry-secret.yml`
+    - Edit Service Account `pipeline` to include this secret
 - Import container images
   - `oc import-image registry.redhat.io/ansible-automation-platform-21/ee-supported-rhel8:latest --confirm`
   - `oc import-image registry.access.redhat.com/ubi8/ubi-minimal:8.5 --confirm`

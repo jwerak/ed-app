@@ -1,0 +1,32 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: ed-app-test1
+  namespace: ed-app
+  labels:
+    tekton.dev/pipeline: build-and-deploy
+spec:
+  params:
+    - name: git-url
+      value: https://github.com/jwerak/ed-app
+    - name: git-tag
+      value: 0.0.2
+  pipelineRef:
+    name: build-and-deploy
+  serviceAccountName: pipeline
+  timeout: 1h0m0s
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        metadata:
+          creationTimestamp: null
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+          storageClassName: gp2
+          volumeMode: Filesystem
+        status: {}

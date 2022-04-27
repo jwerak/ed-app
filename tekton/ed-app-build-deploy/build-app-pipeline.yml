@@ -10,14 +10,14 @@ spec:
     - name: git-url
       type: string
       description: url of the git repo for the code of deployment
-    - name: git-revision
-      type: string
-      description: revision to be used from repo of the code for deployment
-      default: "main"
+    # - name: git-revision
+    #   type: string
+    #   description: revision to be used from repo of the code for deployment
+    #   default: "main"
     - name: git-tag
       type: string
       description: git tag to be fetched
-      default: "dev"
+      default: "main"
     - name: IMAGE
       type: string
       description: image to be built from the code
@@ -37,7 +37,7 @@ spec:
       - name: url
         value: $(params.git-url)
       - name: revision
-        value: $(params.git-revision)
+        value: $(params.git-tag)
     
     - name: build-image
       taskRef:
