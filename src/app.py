@@ -32,7 +32,7 @@ def getMessage(env, version):
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
-<h1>Hello, World!</h1>
+<h1>Hello, TechTalks!</h1>
 <p>ENVIRONMENT: <b>{env}</b></p>
 <p>VERSION: <b>{version}</b></p>
 <p>UPTIME: <b>{uptime} seconds</b></p>
