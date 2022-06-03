@@ -1,0 +1,11 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: Trigger
+metadata:
+  name: ed-app-trigger
+spec:
+  serviceAccountName: pipeline
+  bindings:
+    - ref: ed-app-trigger-binding
+  template:
+    ref: ed-app-trigger-template
